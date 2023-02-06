@@ -1,6 +1,3 @@
-// this example is public domain. enjoy!
-// https://learn.adafruit.com/thermocouple/
-
 #include "max6675.h"
 
 int thermoDO = 4;
