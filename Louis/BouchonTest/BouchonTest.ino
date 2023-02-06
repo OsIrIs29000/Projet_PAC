@@ -111,7 +111,7 @@ pression P;
 intensite_tension IT;
 
 void setup() {
-    Serial.begin(250000);
+    Serial.begin(9600);
     srand(time(NULL));
 }
 
