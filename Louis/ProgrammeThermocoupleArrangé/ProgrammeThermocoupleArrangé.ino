@@ -8,6 +8,11 @@ int thermoSO = 4;
 int thermoCS = 5;
 int thermoSCK = 6;
 
+//THERMOCOUPLE
+int thermoSO1 = 29;
+int thermoCS1 = 30;
+int thermoSCK1 = 31;
+
 
 
 //THERMISTANCE
@@ -26,37 +31,87 @@ const float T0 = 269.15;
 
 
 MAX6675 thermocouple(thermoSCK, thermoCS, thermoSO);
-Adafruit_MAX31856 maxthermo = Adafruit_MAX31856(10, 11, 12, 13);
+MAX6675 thermocouple1(thermoSCK1, thermoCS1, thermoSO1);
 
+
+class temperature
+{
+    public:
+
+    float TempVentilateur(){
+        float VRT0 = analogRead(A0);             
+        VRT0 = (5.00 / 1023.00) * VRT0;      
+        float VR0 = 5 - VRT0;
+        float RT0 = VRT0 / (VR0 / 10000);             
+        float ln0 = log(RT0 / R0v2);
+        float TX0 = (1 / ((ln0 / B) + (1 / T0))); 
+        TX0 = TX0 - 273.15;    
+
+        float VRT1 = analogRead(A1);          
+        VRT1 = (5.00 / 1023.00) * VRT1;      
+        float VR1 = 5 - VRT1;
+        float RT1 = VRT1 / (VR1 / 10000);             
+        float ln1 = log(RT1 / R0v2);
+        float TX1 = (1 / ((ln1 / B) + (1 / T0))); 
+        TX1 = TX1 - 273.15;
+
+        Serial.print("re");
+        Serial.println(TX0);
+        delay(1000);
+        Serial.print("test"); 
+        Serial.println(TX1);
+        delay(1000);
+        
+        
+    }
+};
+
+class temperatureThermocouple
+{
+    public:
+
+    float TempVentilateur(){
+        Serial.print("test");
+        Serial.println(thermocouple.readCelsius());
+        delay(1000);
+
+        Serial.print("re");
+        Serial.println(thermocouple1.readCelsius());
+        delay(1000);
+  
+    }
+};
 
 void setup() {
   Serial.begin(9600);
-  maxthermo.begin();
-  maxthermo.setThermocoupleType(MAX31856_TCTYPE_K);
-  maxthermo.setConversionMode(MAX31856_ONESHOT_NOWAIT);
   delay(500);
 }
 
+temperature T;
+temperatureThermocouple TT;
+
 void loop() {
-  //THERMOCOUPLE MAX6675
-  Serial.print("MAX6675 : "); 
-  Serial.println(thermocouple.readCelsius());
-  Serial.println();
+  TT.TempVentilateur();
+  delay(500);
+  /*//THERMOCOUPLE MAX6675
+  //Serial.print("x"); 
+  Serial.print(thermocouple.readCelsius());
+  Serial.print("x");
   delay(1000);
 
   //THERMOCOUPLE MAX31856
   maxthermo.triggerOneShot();
-  Serial.print("MAX31856 : ");
-  Serial.println(maxthermo.readThermocoupleTemperature());
+  
+  Serial.print(maxthermo.readThermocoupleTemperature()); Serial.print("x");
 
-  /*THERMISTANCE
+  THERMISTANCE
   int a = analogRead(pinTempSensor);
   float R = 1023.0/a-1.0;
   R = R0*R;
   float temperature = 1.0/(log(R/R0)/B+1/298.15)-273.15;
   Serial.print("temperature = ");
   Serial.println(temperature);
-  delay(100);*/
+  delay(100);
 
 
   //THERMISTANCEv20
@@ -67,8 +122,8 @@ void loop() {
   float ln0 = log(RT0 / R0v2);
   float TX0 = (1 / ((ln0 / B) + (1 / T0))); //Temperature from thermistor
   TX0 = TX0 - 273.15;                 //Conversion to Celsius
-  Serial.print("Temperature : ");
-  Serial.println(TX0);
+  Serial.print("x");
+  Serial.print(TX0);
 
 
   //THERMISTANCEv21
@@ -79,8 +134,8 @@ void loop() {
   float ln1 = log(RT1 / R0v2);
   float TX1 = (1 / ((ln1 / B) + (1 / T0))); //Temperature from thermistor
   TX1 = TX1 - 273.15;                 //Conversion to Celsius
-  Serial.print("Temperature : ");
-  Serial.println(TX1);
+  Serial.print("x");
+  Serial.print(TX1);
 
 
   //THERMISTANCEv22
@@ -91,9 +146,8 @@ void loop() {
   float ln2 = log(RT2 / R0v2);
   float TX2 = (1 / ((ln2 / B) + (1 / T0))); //Temperature from thermistor
   TX2 = TX2 - 273.15;                 //Conversion to Celsius
-  Serial.print("Temperature : ");
-  Serial.println(TX2);
-
+  Serial.print("x");
+  Serial.print(TX2);*/
 
 }
 
