@@ -8,12 +8,12 @@ int thermoSO = 4;
 int thermoCS = 5;
 int thermoSCK = 6;
 
-//THERMOCOUPLE
+//THERMOCOUPLE 1
 int thermoSO1 = 29;
 int thermoCS1 = 30;
 int thermoSCK1 = 31;
 
-
+const int pression = A15;
 
 //THERMISTANCE
 const int B = 4275;
@@ -71,11 +71,11 @@ class temperatureThermocouple
     public:
 
     float TempVentilateur(){
-        Serial.print("test");
+        Serial.print("temperatureEntreeDetendeur");
         Serial.println(thermocouple.readCelsius());
         delay(1000);
 
-        Serial.print("re"); 
+        Serial.print("temperatureSortieDetendeur"); 
         Serial.println(thermocouple1.readCelsius());
         delay(1000);
     }
@@ -93,6 +93,9 @@ temperatureThermocouple TT;
 void loop() {
   TT.TempVentilateur();
   delay(500);
+  float ValeurPression = analogRead(pression);
+  //////Serial.print("Pression : ");
+  //////Serial.println(ValeurPression*5/1023);
   /*//THERMOCOUPLE MAX6675
   //Serial.print("x"); 
   Serial.print(thermocouple.readCelsius());
