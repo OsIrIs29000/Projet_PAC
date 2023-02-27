@@ -75,11 +75,11 @@ class temperatureThermocouple
         Serial.println(thermocouple.readCelsius());
         delay(1000);
 
-        Serial.print("re");
+        Serial.print("re"); 
         Serial.println(thermocouple1.readCelsius());
         delay(1000);
-  
     }
+
 };
 
 void setup() {
