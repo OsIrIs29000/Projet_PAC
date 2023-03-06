@@ -1,6 +1,7 @@
 #include "max6675.h"
 #include <math.h>
 #include <Adafruit_MAX31856.h>
+#include <Adafruit_MAX31865_PT100.h>
 
 
 //THERMOCOUPLE
@@ -30,7 +31,6 @@ const int pinTempSensorv22 = A2;
 const int R0v2 = 10000;
 const int Bv2 = 4275;
 const float T0 = 269.15;
-
 
 
 MAX6675 thermocouple1(thermoSCK1, thermoCS1, thermoSO1);
@@ -64,8 +64,10 @@ class temperature
         Serial.print("test"); 
         Serial.println(TX1);
         delay(1000);
-        
-        
+      
+
+      
+
     }
 };
 
@@ -121,11 +123,11 @@ void loop() {
 
   float pression1 = analogRead(capteurPression1);
   Serial.print("Pression1 (V) : ");
-  Serial.println(pression1*5/1023);
+  Serial.println(pression1*9.2/1023);
 
   float pression2 = analogRead(capteurPression2);
   Serial.print("Pression2 (V) : ");
-  Serial.println(pression2*5/552);
+  Serial.println(pression2*5/1023);
 
 
 
