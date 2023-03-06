@@ -15,8 +15,8 @@ int thermoCS2 = 30;
 int thermoSCK2 = 31;
 
 //CAPTEURS PRESSION
-const int capteurPression1 = A14;
-const int capteurPression2 = A15;
+const int capteurBassePression = A14;
+const int capteurHautePression = A15;
 
 
 //THERMISTANCE
@@ -121,15 +121,23 @@ void loop() {
   TT.TempVentilateur();
   delay(500);
 
-  float pression1 = analogRead(capteurPression1);
-  Serial.print("Pression1 (V) : ");
-  Serial.println(pression1*9.2/1023);
+  float rawBassePression = analogRead(capteurBassePression);
+  /*Serial.print("Basse Pression (V) : ");
+  float voltageBassePression = rawBassePression/1023*5;
+  Serial.println(voltageBassePression);
+  Serial.print("Basse Pression (Pa) : ");
+  Serial.println(voltageBassePression*(10.3/5));*/
+  float BassePression = (10.3/818.4)*(rawBassePression-(1023*0.5/5));
+  Serial.println(BassePression);
 
-  float pression2 = analogRead(capteurPression2);
-  Serial.print("Pression2 (V) : ");
-  Serial.println(pression2*5/1023);
-
-
+  float rawHautePression = analogRead(capteurHautePression);
+  /*Serial.print("Haute Pression (V) : ");
+  float voltageHautePression = rawHautePression/1023*5;
+  Serial.println(voltageHautePression);
+  Serial.print("Haute Pression (Pa) : ");
+  Serial.println(voltageHautePression*(34.5/5));*/
+  float HautePression = (34.5/818.4)*(rawHautePression-(1023*0.5/5));
+  Serial.println(HautePression);
 
   /*//THERMOCOUPLE MAX6675
   //Serial.print("x"); 
