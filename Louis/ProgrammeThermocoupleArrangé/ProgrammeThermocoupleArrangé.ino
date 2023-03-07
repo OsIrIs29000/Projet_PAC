@@ -127,7 +127,8 @@ void loop() {
   Serial.println(voltageBassePression);
   Serial.print("Basse Pression (Pa) : ");
   Serial.println(voltageBassePression*(10.3/5));*/
-  float BassePression = (10.3/818.4)*(rawBassePression-(1023*0.5/5));
+  float BassePression = (7.3/818.4)*(rawBassePression-(1023*0.5/5));
+  Serial.println(rawBassePression);
   Serial.println(BassePression);
 
   float rawHautePression = analogRead(capteurHautePression);
@@ -137,6 +138,7 @@ void loop() {
   Serial.print("Haute Pression (Pa) : ");
   Serial.println(voltageHautePression*(34.5/5));*/
   float HautePression = (34.5/818.4)*(rawHautePression-(1023*0.5/5));
+  Serial.println(rawHautePression);
   Serial.println(HautePression);
 
   /*//THERMOCOUPLE MAX6675
