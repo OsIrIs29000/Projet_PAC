@@ -92,7 +92,6 @@ class temperatureThermocouples
                                          "temperatureEntreeCompresseur", "temperatureSortieCompresseur",
                                          "temperatureEntreeCondenseur", "temperatureSortieCondenseur", 
                                          "temperatureSortieEvaporateur"};
-
       for (int i = 0; i < numThermocouples; i++) {
         Serial.print(thermocoupleNames[i]);
         Serial.println(thermocouples[i]->readCelsius());
@@ -106,7 +105,7 @@ class temperaturePT100
 {
   public:
     // Lecture de la température pour la sonde PT100
-    float readPT100(){
+    float readTemperaturePT100(){
       Serial.print("temperatureEau"); 
       Serial.println(pt100.temperature(RNOMINAL, RREF));
       delay(1000);
@@ -139,9 +138,6 @@ class pressionCapteurs
 
 void setup() {
   Serial.begin(9600);
-  pinMode(capteurBassePression, INPUT);
-  pinMode(capteurHautePression, INPUT);
-
   //Initialisation de l'amplificateur MAX31865 pour la sonde PT100 (2 fils)
   pt100.begin(MAX31865_2WIRE);
   delay(500);
@@ -153,7 +149,7 @@ temperaturePT100 temperatureEau;
 pressionCapteurs pression;
 
 void loop() {
-  thermocouples.readTemperature();
+  thermocouples.readTemperaturePT100();
   temperatureEau.readPT100();
   pression.readPression();
   
