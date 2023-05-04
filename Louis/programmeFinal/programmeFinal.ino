@@ -6,6 +6,9 @@
 #define RREF      430.0  //Résistance de référence
 #define RNOMINAL  100.0  //Résistance nominale
 
+//Temps en minute pour l'état stable
+#define tempsEtatStable 10
+
 /*
 //THERMOCOUPLE ENTREE DETENDEUR
 int thermoSO1 = 22;
@@ -44,7 +47,7 @@ int thermoSCK7 = 42;
 */
 
 
-// Assignation des broches pour les thermocouples et la sonde PT100
+// Assignation des broches pour les thermocouples et la sonde PT100 avec une énumération
 enum{
   thermoSO1 = 22, thermoCS1, thermoSCK1,     //THERMOCOUPLE ENTREE DETENDEUR
   thermoSO2, thermoCS2, thermoSCK2,          //THERMOCOUPLE SORTIE DETENDEUR
@@ -75,7 +78,7 @@ MAX6675 thermocoupleSortieEvaporateur(thermoSCK7, thermoCS7, thermoSO7);
 //Initialisation des amplificateurs MAX31865 pour la sonde PT100
 MAX31865 pt100 = MAX31865(pt100CS, pt100SDI, pt100SDO, pt100CLK);
 
-
+// Définition de la classe pour le temps écoulé
 class tempsEcoule
 {
   public:
@@ -124,11 +127,9 @@ class temperatureThermocouples
 // Définition de la classe pour les température de la sonde PT100
 class temperaturePT100
 {
-
-
   public:
-    bool valeurAjoutee = false;
-    float tempFinale = 0;
+    bool valeurAjoutee1 = false, valeurAjoutee2 = false;
+    float tempInitiale, tempFinale;
     // Lecture de la température pour la sonde PT100
     float readTemperaturePT100(tempsEcoule tempsPT100){
       float tempEau = pt100.temperature(RNOMINAL, RREF);
@@ -136,10 +137,18 @@ class temperaturePT100
       Serial.println(tempEau);
       delay(1000);
 
-      if (tempsPT100.tempsMinutes >= 10 && !valeurAjoutee) {
+      // Assignation à une variable tempInitiale de la température de l'eau à 0min
+      if(tempsPT100.tempsMinutes >= 0 && !valeurAjoutee1){
+        tempInitiale = tempEau;
+        valeurAjoutee1 = true;
+      }
+
+      // Assignation à une variable tempFinale de la température de l'eau à l'état stable, et calcul et affichage du COP réel
+      if(tempsPT100.tempsMinutes >= tempsEtatStable && !valeurAjoutee2){
         tempFinale = tempEau;
-        valeurAjoutee = true;
-        Serial.print(tempFinale);
+        valeurAjoutee2 = true;
+        Serial.print("copReel");
+        Serial.println((18*4185*(tempFinale-tempInitiale))/(29.8*tempsEtatStable));
       }
     
     }
