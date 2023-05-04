@@ -75,6 +75,27 @@ MAX6675 thermocoupleSortieEvaporateur(thermoSCK7, thermoCS7, thermoSO7);
 //Initialisation des amplificateurs MAX31865 pour la sonde PT100
 MAX31865 pt100 = MAX31865(pt100CS, pt100SDI, pt100SDO, pt100CLK);
 
+
+class tempsEcoule
+{
+  public:
+    float temps, tempsSecondes, tempsMinutes;
+    float affichageTemps(){
+      temps = millis();
+      tempsSecondes = temps/1000;
+      Serial.print("tempsSecondes");
+      Serial.println(tempsSecondes, 0);
+      delay(1000);
+
+      tempsMinutes = temps/1000/60;
+      Serial.print("tempsMinutes");
+      Serial.println(tempsMinutes);
+      delay(1000);
+    }
+
+};
+
+
 // Définition de la classe pour les températures des thermocouples
 class temperatureThermocouples
 {
@@ -103,13 +124,25 @@ class temperatureThermocouples
 // Définition de la classe pour les température de la sonde PT100
 class temperaturePT100
 {
+
+
   public:
+    bool valeurAjoutee = false;
+    float tempFinale = 0;
     // Lecture de la température pour la sonde PT100
-    float readTemperaturePT100(){
+    float readTemperaturePT100(tempsEcoule tempsPT100){
+      float tempEau = pt100.temperature(RNOMINAL, RREF);
       Serial.print("temperatureEau"); 
-      Serial.println(pt100.temperature(RNOMINAL, RREF));
+      Serial.println(tempEau);
       delay(1000);
-   }
+
+      if (tempsPT100.tempsMinutes >= 10 && !valeurAjoutee) {
+        tempFinale = tempEau;
+        valeurAjoutee = true;
+        Serial.print(tempFinale);
+      }
+    
+    }
 
 };
 
@@ -136,6 +169,7 @@ class pressionCapteurs
 
 };
 
+
 void setup() {
   Serial.begin(9600);
   //Initialisation de l'amplificateur MAX31865 pour la sonde PT100 (2 fils)
@@ -144,21 +178,15 @@ void setup() {
   
 }
 
+tempsEcoule temps;
 temperatureThermocouples thermocouples;
 temperaturePT100 temperatureEau;
 pressionCapteurs pression;
 
 void loop() {
-  thermocouples.readTemperaturePT100();
-  temperatureEau.readPT100();
+  thermocouples.readTemperature();
+  temperatureEau.readTemperaturePT100(temps);
   pression.readPression();
+  temps.affichageTemps();
   
-  float temps = millis();
-  Serial.print("tempsSecondes");
-  Serial.println(temps/1000, 0);
-  delay(1000);
-  Serial.print("tempsMinutes");
-  Serial.println(temps/1000/60);
-  delay(1000);
-
 }
