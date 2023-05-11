@@ -149,6 +149,7 @@ class temperaturePT100
         valeurAjoutee2 = true;
         Serial.print("copReel");
         Serial.println((18*4185*(tempFinale-tempInitiale))/(29.8*tempsEtatStable));
+        delay(1000);
       }
     
     }
